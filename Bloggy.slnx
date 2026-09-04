@@ -1,3 +1,7 @@
 <Solution>
-  <Project Path="Bloggy/Bloggy.csproj" />
+  <Project Path="Bloggy.Application.Contracts/Bloggy.Application.Contracts.csproj" />
+  <Project Path="Bloggy.Application/Bloggy.Application.csproj" />
+  <Project Path="Bloggy.Domain/Bloggy.Domain.csproj" />
+  <Project Path="Bloggy.EntityFrameworkCore/Bloggy.EntityFrameworkCore.csproj" />
+  <Project Path="Bloggy/Bloggy.HttpApi.csproj" />
 </Solution>
