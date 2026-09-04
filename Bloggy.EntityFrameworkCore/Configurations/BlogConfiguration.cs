@@ -1,5 +1,5 @@
-﻿using Bloggy.Domain;
-using Bloggy.Domain.BlogAggregate;
+﻿using Bloggy.Domain.BlogAggregate;
+using Bloggy.Domain.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

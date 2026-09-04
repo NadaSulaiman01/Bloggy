@@ -6,8 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Bloggy.Domain.Shared\Bloggy.Domain.Shared.csproj" />
-  </ItemGroup>
-
 </Project>

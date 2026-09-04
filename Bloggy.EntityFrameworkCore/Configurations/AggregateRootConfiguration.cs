@@ -1,5 +1,5 @@
-﻿using Bloggy.Domain;
-using Bloggy.Domain.Common;
+﻿using Bloggy.Domain.Common;
+using Bloggy.Domain.Shared;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Bloggy.EntityFrameworkCore.Configurations

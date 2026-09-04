@@ -1,6 +1,7 @@
 <Solution>
   <Project Path="Bloggy.Application.Contracts/Bloggy.Application.Contracts.csproj" />
   <Project Path="Bloggy.Application/Bloggy.Application.csproj" />
+  <Project Path="Bloggy.Domain.Shared/Bloggy.Domain.Shared.csproj" Id="ef38cca6-31ee-4498-97b2-d8ffa822b25d" />
   <Project Path="Bloggy.Domain/Bloggy.Domain.csproj" />
   <Project Path="Bloggy.EntityFrameworkCore/Bloggy.EntityFrameworkCore.csproj" />
   <Project Path="Bloggy/Bloggy.HttpApi.csproj" />
