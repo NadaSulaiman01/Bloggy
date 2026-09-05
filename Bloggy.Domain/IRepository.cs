@@ -1,3 +1,5 @@
+using System.Linq.Expressions;
+
 namespace Bloggy.Domain
 {
     public interface IRepository<T, TKey>
@@ -10,5 +12,7 @@ namespace Bloggy.Domain
         Task UpdateAsync(T entity, CancellationToken ct = default);
         Task DeleteAsync(T entity, CancellationToken ct = default);
         Task SaveChangesAsync(CancellationToken ct = default);
+        Task<T?> FindAsync(Expression<Func<T, bool>> predicate, CancellationToken ct = default);
+        Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate, CancellationToken ct = default);
     }
 }

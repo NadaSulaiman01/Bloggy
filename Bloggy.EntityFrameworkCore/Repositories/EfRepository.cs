@@ -1,5 +1,6 @@
 using Bloggy.Domain;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Bloggy.EntityFrameworkCore.Repositories
 {
@@ -68,6 +69,15 @@ namespace Bloggy.EntityFrameworkCore.Repositories
         public async Task SaveChangesAsync(CancellationToken ct = default)
         {
             await _dbContext.SaveChangesAsync(ct);
+        }
+        public async Task<T?> FindAsync(Expression<Func<T, bool>> predicate, CancellationToken ct = default)
+        {
+            return await _dbSet.FirstOrDefaultAsync(predicate, ct);
+        }
+
+        public async Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate, CancellationToken ct = default)
+        {
+            return await _dbSet.AnyAsync(predicate, ct);
         }
     }
 }

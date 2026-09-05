@@ -5,6 +5,7 @@ using Bloggy.Application.Contracts.Blogs.ResponseDtos;
 using Bloggy.Application.Contracts.Common;
 using Bloggy.Domain;
 using Bloggy.Domain.BlogAggregate;
+using Bloggy.Domain.Shared;
 
 namespace Bloggy.Application.Blogs
 {
@@ -22,15 +23,26 @@ namespace Bloggy.Application.Blogs
 
         public async Task CreateBlogAsync(CreateUpdateBlogRequestDto input, CancellationToken ct = default)
         {
-            var blog = new Blog(input.Title, input.Content, Guid.Empty);
+            var blogTitleExists  = await _repository.ExistsAsync(x => x.Title == input.Title, ct);
+
+            if (blogTitleExists)
+            {
+                throw new Exception(ErrorCodes.DuplicateBlogTitle);
+            }
+
+            var blog = new Blog(input.Title, input.Content, Guid.NewGuid());
             await _repository.AddAsync(blog, ct);
             await _repository.SaveChangesAsync(ct);
         }
         public async Task DeleteBlogAsync(Guid id, CancellationToken ct = default)
         {
-            var entity = await _repository.GetByIdAsync(id, ct);
-            if (entity is null) throw new KeyNotFoundException($"Blog with id '{id}' was not found.");
-            await _repository.DeleteAsync(entity, ct);
+            var blog = await _repository.GetByIdAsync(id, ct);
+
+            if (blog is null)
+            {
+                throw new Exception(ErrorCodes.BlogNotFound);
+            }
+            await _repository.DeleteAsync(blog, ct);
             await _repository.SaveChangesAsync(ct);
         }
 
@@ -49,10 +61,15 @@ namespace Bloggy.Application.Blogs
 
         public async Task UpdateBlogAsync(Guid id, CreateUpdateBlogRequestDto input, CancellationToken ct = default)
         {
-            var entity = await _repository.GetByIdAsync(id, ct);
-            if (entity is null) throw new KeyNotFoundException($"Blog with id '{id}' was not found.");
-            entity.Update(input.Title, input.Content);
-            await _repository.UpdateAsync(entity, ct);
+            var blog = await _repository.GetByIdAsync(id, ct);
+
+            if (blog is null)
+            {
+                throw new Exception(ErrorCodes.BlogNotFound);
+            }
+
+            blog.Update(input.Title, input.Content);
+            await _repository.UpdateAsync(blog, ct);
             await _repository.SaveChangesAsync(ct);
         }
     }
