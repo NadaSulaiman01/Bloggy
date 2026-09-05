@@ -1,4 +1,6 @@
+using Bloggy.Domain;
 using Bloggy.EntityFrameworkCore;
+using Bloggy.EntityFrameworkCore.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +16,8 @@ builder.Services.AddDbContext<BloggyDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+builder.Services.AddScoped(typeof(IRepository<,>), typeof(EfRepository<,>));
 
 var app = builder.Build();
 
