@@ -24,7 +24,7 @@ Simple blogging API built with **ASP.NET Core (.NET 10)**, **EF Core**, and **SQ
 
 * **.NET 10 SDK**
 * **SQL Server** (or SQL Server-compatible provider)
-* **Keycloak** — see the [Bloggy Infrastructure](https://github.com/) repository
+* **Keycloak** — see the [Bloggy Infrastructure](https://github.com/NadaSulaiman01/BloggyInfra) repository
 
 ## **Quick Start**
 
