@@ -28,31 +28,53 @@ namespace Bloggy.EntityFrameworkCore.Repositories
         }
 
 
-        public async Task<(List<T> Items, long TotalCount)> GetAllAsync(int pageIndex = 1, int pageSize = 20, CancellationToken ct = default)
+        public async Task<(List<T> Items, long TotalCount)> GetAllAsync(
+     int pageIndex = 1,
+     int pageSize = 20,
+     Expression<Func<T, bool>>? predicate = null,
+     CancellationToken ct = default)
         {
             if (pageIndex < 1) pageIndex = 1;
-            if (pageSize < 1) pageSize = 20;
 
-            var query = _dbSet.AsQueryable();
-            var total = await query.LongCountAsync(ct);
-            var items = await query.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync(ct);
-            return (items, total);
-        }
-        public async Task<(IReadOnlyList<T> Items, long TotalCount)> GetAllReadOnlyAsync(int pageIndex = 1, int pageSize = 20, CancellationToken ct = default)
-        {
-            if (pageIndex < 1) pageIndex = 1;
-            if (pageSize < 1) pageSize = 20;
+            if (pageSize < 1)  pageSize = 20;
 
-            var query = _dbSet.AsNoTracking();
+            IQueryable<T> query = _dbSet;
 
-            var total = await query.LongCountAsync(ct);
+            if (predicate is not null)
+                query = query.Where(predicate);
+
+            var totalCount = await query.LongCountAsync(ct);
 
             var items = await query
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync(ct);
 
-            return (items, total);
+            return (items, totalCount);
+        }
+        public async Task<(IReadOnlyList<T> Items, long TotalCount)> GetAllReadOnlyAsync(
+            int pageIndex = 1,
+            int pageSize = 20,
+            Expression<Func<T, bool>>? predicate = null,
+            CancellationToken ct = default)
+        {
+            if (pageIndex < 1) pageIndex = 1;
+
+            if (pageSize < 1)  pageSize = 20;
+
+            IQueryable<T> query = _dbSet.AsNoTracking();
+
+            if (predicate is not null)
+                query = query.Where(predicate);
+
+            var totalCount = await query.LongCountAsync(ct);
+
+            var items = await query
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync(ct);
+
+            return (items, totalCount);
         }
 
         public async Task<T?> GetByIdAsync(TKey id, CancellationToken ct = default)

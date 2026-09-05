@@ -1,9 +1,11 @@
 using Bloggy.Application;
 using Bloggy.Application.Blogs;
 using Bloggy.Application.Contracts.Blogs;
+using Bloggy.Application.Contracts.Common;
 using Bloggy.Domain;
 using Bloggy.EntityFrameworkCore;
 using Bloggy.EntityFrameworkCore.Repositories;
+using Bloggy.HttpApi.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,9 +22,12 @@ builder.Services.AddDbContext<BloggyDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddScoped(typeof(IRepository<,>), typeof(EfRepository<,>));
 builder.Services.AddScoped<IBlogService, BlogService>();
+
+builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 builder.Services.AddAutoMapper(cfg =>
 {
     cfg.AddProfile<BlogProfile>();

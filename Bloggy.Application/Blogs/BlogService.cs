@@ -3,6 +3,7 @@ using Bloggy.Application.Contracts.Blogs;
 using Bloggy.Application.Contracts.Blogs.RequestDtos;
 using Bloggy.Application.Contracts.Blogs.ResponseDtos;
 using Bloggy.Application.Contracts.Common;
+using Bloggy.Application.Contracts.Common.ResponseDtos;
 using Bloggy.Domain;
 using Bloggy.Domain.BlogAggregate;
 using Bloggy.Domain.Shared;
@@ -13,12 +14,15 @@ namespace Bloggy.Application.Blogs
     {
         private readonly IRepository<Blog, Guid> _repository;
         private readonly IMapper _mapper;
+        private readonly ICurrentUser _currentUser;
 
         public BlogService(IRepository<Blog, Guid> repository,
-            IMapper mapper)
+            IMapper mapper,
+            ICurrentUser currentUser)
         {
             _repository = repository;
             _mapper = mapper;
+            _currentUser = currentUser;
         }
 
         public async Task CreateBlogAsync(CreateUpdateBlogRequestDto input, CancellationToken ct = default)
@@ -50,7 +54,21 @@ namespace Bloggy.Application.Blogs
         {
             var pageSize = input.MaxResultCount > 0 ? input.MaxResultCount : 20;
             var pageIndex = (input.SkipCount / pageSize) + 1;
-            var (items, total) = await _repository.GetAllReadOnlyAsync(pageIndex, pageSize, ct);
+            var (items, total) = await _repository.GetAllReadOnlyAsync(pageIndex, pageSize, null,ct);
+            var dto = new PagedResultDto<BlogDto>
+            {
+                Items = items.Select(x => _mapper.Map<BlogDto>(x)).ToList()
+            };
+            dto.TotalCount = total;
+            return dto;
+        }
+
+        public async Task<PagedResultDto<BlogDto>> GetCurrentUserBlogsAsync(PagedResultRequestDto input, CancellationToken ct = default)
+        {
+            var pageSize = input.MaxResultCount > 0 ? input.MaxResultCount : 20;
+            var pageIndex = (input.SkipCount / pageSize) + 1;
+
+            var (items, total) = await _repository.GetAllReadOnlyAsync(pageIndex, pageSize, x => x.AuthorId == _currentUser.Id,ct);
             var dto = new PagedResultDto<BlogDto>
             {
                 Items = items.Select(x => _mapper.Map<BlogDto>(x)).ToList()

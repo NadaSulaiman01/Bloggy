@@ -1,4 +1,4 @@
-﻿namespace Bloggy.Application.Contracts.Common
+﻿namespace Bloggy.Application.Contracts.Common.ResponseDtos
 {
     public class PagedResultDto<T> : ListResultDto<T>
     {

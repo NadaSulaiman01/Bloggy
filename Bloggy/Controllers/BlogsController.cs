@@ -1,7 +1,7 @@
 ﻿using Bloggy.Application.Contracts.Blogs;
 using Bloggy.Application.Contracts.Blogs.RequestDtos;
 using Bloggy.Application.Contracts.Blogs.ResponseDtos;
-using Bloggy.Application.Contracts.Common;
+using Bloggy.Application.Contracts.Common.ResponseDtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,6 +30,11 @@ namespace Bloggy.HttpApi.Controllers
         [HttpGet]
         public Task<PagedResultDto<BlogDto>> GetBlogsAsync([FromQuery] PagedResultRequestDto input, CancellationToken ct = default)
             => _blogService.GetBlogsAsync(input, ct);
+
+        [Authorize]
+        [HttpGet("my")]
+        public Task<PagedResultDto<BlogDto>> GetCurrentUserBlogsAsync([FromQuery] PagedResultRequestDto input, CancellationToken ct = default)
+            => _blogService.GetCurrentUserBlogsAsync(input, ct);
 
         [Authorize]
         [HttpDelete("{id}")]

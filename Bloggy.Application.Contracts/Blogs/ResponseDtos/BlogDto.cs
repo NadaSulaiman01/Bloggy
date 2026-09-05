@@ -1,4 +1,4 @@
-﻿using Bloggy.Application.Contracts.Common;
+﻿using Bloggy.Application.Contracts.Common.ResponseDtos;
 
 namespace Bloggy.Application.Contracts.Blogs.ResponseDtos
 {
