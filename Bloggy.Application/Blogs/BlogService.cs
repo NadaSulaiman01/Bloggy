@@ -34,7 +34,7 @@ namespace Bloggy.Application.Blogs
                 throw new Exception(ErrorCodes.DuplicateBlogTitle);
             }
 
-            var blog = new Blog(input.Title, input.Content, Guid.NewGuid());
+            var blog = new Blog(input.Title, input.Content, _currentUser.Id!.Value);
             await _repository.AddAsync(blog, ct);
             await _repository.SaveChangesAsync(ct);
         }

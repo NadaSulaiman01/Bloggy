@@ -28,6 +28,8 @@ builder.Services.AddScoped(typeof(IRepository<,>), typeof(EfRepository<,>));
 builder.Services.AddScoped<IBlogService, BlogService>();
 
 builder.Services.AddScoped<ICurrentUser, CurrentUser>();
+
+builder.Services.AddScoped<Func<Guid?>>(sp => () => sp.GetRequiredService<ICurrentUser>().Id);
 builder.Services.AddAutoMapper(cfg =>
 {
     cfg.AddProfile<BlogProfile>();
