@@ -30,9 +30,7 @@ namespace Bloggy.Application.Blogs
             var blogTitleExists  = await _repository.ExistsAsync(x => x.Title == input.Title, ct);
 
             if (blogTitleExists)
-            {
-                throw new Exception(ErrorCodes.DuplicateBlogTitle);
-            }
+                throw new BusinessException(ErrorCodes.DuplicateBlogTitle);
 
             var blog = new Blog(input.Title, input.Content, _currentUser.Id!.Value);
             await _repository.AddAsync(blog, ct);
@@ -43,9 +41,11 @@ namespace Bloggy.Application.Blogs
             var blog = await _repository.GetByIdAsync(id, ct);
 
             if (blog is null)
-            {
-                throw new Exception(ErrorCodes.BlogNotFound);
-            }
+                throw new BusinessException(ErrorCodes.BlogNotFound);
+
+            if (blog.AuthorId != _currentUser.Id)
+                throw new BusinessException(ErrorCodes.ForbiddenAction);
+
             await _repository.DeleteAsync(blog, ct);
             await _repository.SaveChangesAsync(ct);
         }
@@ -55,6 +55,7 @@ namespace Bloggy.Application.Blogs
             var pageSize = input.MaxResultCount > 0 ? input.MaxResultCount : 20;
             var pageIndex = (input.SkipCount / pageSize) + 1;
             var (items, total) = await _repository.GetAllReadOnlyAsync(pageIndex, pageSize, null,ct);
+
             var dto = new PagedResultDto<BlogDto>
             {
                 Items = items.Select(x => _mapper.Map<BlogDto>(x)).ToList()
@@ -82,9 +83,10 @@ namespace Bloggy.Application.Blogs
             var blog = await _repository.GetByIdAsync(id, ct);
 
             if (blog is null)
-            {
-                throw new Exception(ErrorCodes.BlogNotFound);
-            }
+                throw new BusinessException(ErrorCodes.BlogNotFound);
+
+            if (blog.AuthorId != _currentUser.Id)
+                throw new BusinessException(ErrorCodes.ForbiddenAction);
 
             blog.Update(input.Title, input.Content);
             await _repository.UpdateAsync(blog, ct);
