@@ -1,36 +1,55 @@
-Bloggy
-======
+# **Bloggy**
 
-Simple blogging API built with ASP.NET Core (.NET 10), EF Core and SQL Server.
+Simple blogging API built with **ASP.NET Core (.NET 10)**, **EF Core**, and **SQL Server**.
 
-Key features
-- Domain-driven design architecture with aggregate roots and repository pattern
-- EF Core with optimistic concurrency (rowversion)
-- Auditing (CreationTime, CreatorId)
-- BusinessException middleware with structured error responses
-- FluentValidation for request DTOs
-- JWT for authentication/authorization using Keycloak identity provider to implement SSO
+## **Key Features**
 
-Projects
-- Bloggy (Web API / HTTP entrypoint)
-- Bloggy.Application (application services)
-- Bloggy.Application.Contracts (DTOs, validators)
-- Bloggy.EntityFrameworkCore (EF Core DbContext, configurations, migrations)
-- Bloggy.Domain (domain models and repository interfaces)
-- Bloggy.Domain.Shared (shared constants and exceptions)
+* **Domain-driven design** architecture with aggregate roots and repository pattern
+* **EF Core** with optimistic concurrency using `rowversion`
+* **Auditing** (`CreationTime`, `CreatorId`)
+* **BusinessException middleware** with structured error responses
+* **FluentValidation** for request DTOs
+* **JWT authentication/authorization** using **Keycloak** as the identity provider for SSO
 
-Prerequisites
-- .NET 10 SDK
-- Visual Studio 2026
-- SQL Server (or SQL Server-compatible provider)
+## **Projects**
 
-Quick start
-1. Open project solution in Visual Studio code 2026
-2. Build solution
-3. Set Bloggy.HttpApi as start up project
-4. Open Package Manager Console and set Bloggy.EntityFrameworkCore as default project
-5. enter update-database
-6. Run start up project
+* **Bloggy** — Web API / HTTP entrypoint
+* **Bloggy.Application** — Application services
+* **Bloggy.Application.Contracts** — DTOs and validators
+* **Bloggy.EntityFrameworkCore** — EF Core DbContext, configurations, and migrations
+* **Bloggy.Domain** — Domain models and repository interfaces
+* **Bloggy.Domain.Shared** — Shared constants and exceptions
 
+## **Prerequisites**
 
+* **.NET 10 SDK**
+* **SQL Server** (or SQL Server-compatible provider)
+* **Keycloak** — see the [Bloggy Infrastructure](https://github.com/) repository
 
+## **Quick Start**
+
+From the **solution root**, run the following commands.
+
+### **1. Restore dependencies**
+
+```bash
+dotnet restore
+```
+
+### **2. Update the database**
+
+```bash
+dotnet ef database update --project Bloggy.EntityFrameworkCore --startup-project Bloggy
+```
+
+### **3. Run the API**
+
+```bash
+dotnet run --project Bloggy --launch-profile https
+```
+
+The API will be available at:
+
+```text
+https://localhost:7084
+```
