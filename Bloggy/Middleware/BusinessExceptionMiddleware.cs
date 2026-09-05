@@ -1,4 +1,5 @@
 using Bloggy.Domain.Shared;
+using FluentValidation;
 using System.Text.Json;
 
 namespace Bloggy.Middleware
@@ -17,6 +18,16 @@ namespace Bloggy.Middleware
             try
             {
                 await _next(context);
+            }
+            catch (ValidationException ex)
+            {
+                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                context.Response.ContentType = "application/json";
+
+                var errors = ex.Errors.Select(e => new { field = e.PropertyName, error = e.ErrorMessage });
+                var payload = new { message = "Validation failed", errors };
+                var json = JsonSerializer.Serialize(payload);
+                await context.Response.WriteAsync(json);
             }
             catch (BusinessException ex)
             {

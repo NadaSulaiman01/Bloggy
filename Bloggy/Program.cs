@@ -8,10 +8,9 @@ using Bloggy.EntityFrameworkCore.Repositories;
 using Bloggy.HttpApi.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using FluentValidation;
-using FluentValidation.AspNetCore;
 using Bloggy.Application.Contracts.Blogs.RequestDtos;
 using Bloggy.Middleware;
+using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +20,6 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateUpdateBlogRequestDtoValidator>();
 
 builder.Services.AddDbContext<BloggyDbContext>(options =>

@@ -20,7 +20,7 @@ namespace Bloggy.HttpApi.Controllers
         [Authorize]
         [HttpPost]
         public Task CreateBlogAsync([FromBody] CreateUpdateBlogRequestDto input, CancellationToken ct = default)
-        => _blogService.CreateBlogAsync(input, ct);
+            => _blogService.CreateBlogAsync(input, ct);
 
         [Authorize]
         [HttpPut("{id}")]

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using Bloggy.Application.Contracts.Blogs;
 using Bloggy.Application.Contracts.Blogs.RequestDtos;
 using Bloggy.Application.Contracts.Blogs.ResponseDtos;
@@ -15,18 +16,27 @@ namespace Bloggy.Application.Blogs
         private readonly IRepository<Blog, Guid> _repository;
         private readonly IMapper _mapper;
         private readonly ICurrentUser _currentUser;
+        private readonly IValidator<CreateUpdateBlogRequestDto> _validator;
 
         public BlogService(IRepository<Blog, Guid> repository,
             IMapper mapper,
-            ICurrentUser currentUser)
+            ICurrentUser currentUser,
+            IValidator<CreateUpdateBlogRequestDto> validator)
         {
             _repository = repository;
             _mapper = mapper;
             _currentUser = currentUser;
+            _validator = validator;
         }
 
         public async Task CreateBlogAsync(CreateUpdateBlogRequestDto input, CancellationToken ct = default)
         {
+            var validationResult = await _validator.ValidateAsync(input, ct);
+            if (!validationResult.IsValid)
+            {
+                throw new FluentValidation.ValidationException(validationResult.Errors);
+            }
+
             var blogTitleExists  = await _repository.ExistsAsync(x => x.Title == input.Title, ct);
 
             if (blogTitleExists)
@@ -80,6 +90,12 @@ namespace Bloggy.Application.Blogs
 
         public async Task UpdateBlogAsync(Guid id, CreateUpdateBlogRequestDto input, CancellationToken ct = default)
         {
+            var validationResult = await _validator.ValidateAsync(input, ct);
+            if (!validationResult.IsValid)
+            {
+                throw new FluentValidation.ValidationException(validationResult.Errors);
+            }
+
             var blog = await _repository.GetByIdAsync(id, ct);
 
             if (blog is null)
