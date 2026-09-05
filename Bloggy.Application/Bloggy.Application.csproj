@@ -7,8 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="16.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Bloggy.Application.Contracts\Bloggy.Application.Contracts.csproj" />
     <ProjectReference Include="..\Bloggy.Domain\Bloggy.Domain.csproj" />
-    <ProjectReference Include="..\Bloggy.EntityFrameworkCore\Bloggy.EntityFrameworkCore.csproj" />
   </ItemGroup>
 
 </Project>

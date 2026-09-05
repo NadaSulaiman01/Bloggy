@@ -17,5 +17,11 @@ namespace Bloggy.Domain.BlogAggregate
             AuthorId = authorId;
         }
 
+        public void Update(string title, string content)
+        {
+            Title = title;
+            Content = content;
+        }
+
     }
 }

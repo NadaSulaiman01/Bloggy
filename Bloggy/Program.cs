@@ -1,3 +1,6 @@
+using Bloggy.Application;
+using Bloggy.Application.Blogs;
+using Bloggy.Application.Contracts.Blogs;
 using Bloggy.Domain;
 using Bloggy.EntityFrameworkCore;
 using Bloggy.EntityFrameworkCore.Repositories;
@@ -18,6 +21,11 @@ builder.Services.AddDbContext<BloggyDbContext>(options =>
 });
 
 builder.Services.AddScoped(typeof(IRepository<,>), typeof(EfRepository<,>));
+builder.Services.AddScoped<IBlogService, BlogService>();
+builder.Services.AddAutoMapper(cfg =>
+{
+    cfg.AddProfile<BlogProfile>();
+});
 
 var app = builder.Build();
 
