@@ -27,6 +27,23 @@ builder.Services.AddAutoMapper(cfg =>
     cfg.AddProfile<BlogProfile>();
 });
 
+var corsOrigins = builder.Configuration["App:CorsOrigins"]?
+    .Split(",", StringSplitOptions.RemoveEmptyEntries)
+    .Select(s => s.Trim().TrimEnd('/'))
+    .ToArray()
+    ?? Array.Empty<string>();
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(corsPolicy =>
+    {
+        corsPolicy
+            .WithOrigins(corsOrigins)
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -43,6 +60,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors();
 
 app.UseAuthorization();
 
