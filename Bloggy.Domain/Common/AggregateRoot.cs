@@ -2,7 +2,7 @@
 {
     public abstract class AggregateRoot<TKey> : Entity<TKey>
     {
-        public virtual string ConcurrencyStamp { get; protected set; }
+        public virtual byte[]? RowVersion { get; protected set; }
         protected AggregateRoot() { }
         protected AggregateRoot(TKey id) : base(id) { }
     }

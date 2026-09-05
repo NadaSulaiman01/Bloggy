@@ -1,5 +1,5 @@
 ﻿using Bloggy.Domain.Common;
-using Bloggy.Domain.Shared;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Bloggy.EntityFrameworkCore.Configurations
@@ -12,9 +12,11 @@ namespace Bloggy.EntityFrameworkCore.Configurations
         {
             base.Configure(builder);
 
-            builder.Property(x => x.ConcurrencyStamp)
-                .IsRequired()
-                .HasMaxLength(StringLengths.ConcurrencyStampLength);
+            builder.Property(x => x.RowVersion)
+                .IsRequired(false)
+                .IsConcurrencyToken()
+                .ValueGeneratedOnAddOrUpdate()
+                .HasColumnType("rowversion");
         }
     }
 }
