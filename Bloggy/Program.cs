@@ -4,6 +4,7 @@ using Bloggy.Application.Contracts.Blogs;
 using Bloggy.Domain;
 using Bloggy.EntityFrameworkCore;
 using Bloggy.EntityFrameworkCore.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -43,6 +44,19 @@ builder.Services.AddCors(options =>
             .AllowAnyHeader();
     });
 });
+
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.Authority = builder.Configuration["Keycloak:Authority"];
+
+        options.Audience = builder.Configuration["Keycloak:Audience"];
+
+        options.RequireHttpsMetadata = false;
+    });
+
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
